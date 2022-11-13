@@ -1,0 +1,5 @@
+#!/run/current-system/profile/bin/bash
+CURRENT_PROFIL="/home/dev_1/opt/python-dev_3_7"
+export LD_LIBRARY_PATH="$CURRENT_PROFIL/lib"
+"$@"
+
