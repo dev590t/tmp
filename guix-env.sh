@@ -41,7 +41,7 @@ guix time-machine \
     --url=https://git.savannah.gnu.org/git/guix.git --commit=c81457a5883ea43950eb2ecdcbb58a5b144bcd11 \
     -C $DEFAULT_CHANNELS -- environment --pure $PACKAGES
 
-# install in profile to protect against guix gc => avoid rebuild
+# install in profile to avoid rebuild after guix gc
 guix time-machine \
     --url=https://git.savannah.gnu.org/git/guix.git --commit=c81457a5883ea43950eb2ecdcbb58a5b144bcd11 \
     -C $DEFAULT_CHANNELS -- install $PACKAGES -p ~/opt/python-dev_3_7

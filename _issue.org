@@ -1,0 +1,146 @@
+#+title: _issue
+** version `GLIBC_2.33' not found
+*** FAIL search old solution
+CLOSED: [2022-11-14 Mon 00:42]
+- State "FAIL"       from              [2022-11-14 Mon 00:42]
+**** FAIL grep
+CLOSED: [2022-11-13 Sun 23:49]
+- State "FAIL"       from              [2022-11-13 Sun 23:49]
+#+begin_example
+dev_1@dev_1 /mnt/recoverData/borg_restore/home/zhenlei/XXX/MyWorkspace2/trading$ find -name "*.org" -exec grep -l {} -e GLIBC_ \;
+./darwinexBot2/design.org
+
+dev_1@dev_1 /mnt/linuxProgram/workspace$ find -name "*.org" -exec grep {} -e GLIBC_ \;
+dev_1@dev_1 /mnt/linuxProgram/workspace$ ls
+ElegantRL/  FinRL-Meta/       Finrl_python3.9/  dev_1_pcloud/  finrl_usage/       pyproject.toml   rentability/
+FinRL/      FinRL_python3.7/  blasforr_pcloud/  docker/        finrl_usage_5-20/  python3-trepan/  spark-nlp-book/
+dev_1@dev_1 /mnt/linuxProgram/workspace$
+
+#+end_example
+**** FAIL mem
+CLOSED: [2022-11-13 Sun 23:52]
+- State "FAIL"       from "TODO"       [2022-11-13 Sun 23:52]
+exist 1 branch colab
+
+find in finrl_usage, but no .org
+accidentel del?
+
+*** desc
+! which mkdir
+/gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash: /home/dev_1/opt/python-dev_3_7/lib/libc.so.6: version `GLIBC_2.33' not found (required by /gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash)
+*** cause
+why call bash,
+jupyter exec shell op, doit use bash
+why ce bash
+**** DONE which bash = /run/current-system/profile/bin/bash
+CLOSED: [2022-11-14 Mon 00:26]
+no is bash of guix env
+#+begin_example
+dev_1@dev_1 /mnt/recoverData/linuxProgram/workspace/spark-nlp-book [env]$ which -a bash
+/gnu/store/izzarhnylq2v55hi3a8pbhwpi5alhpg1-profile/bin/bash
+dev_1@dev_1 /mnt/recoverData/linuxProgram/workspace/spark-nlp-book [env]$ /gnu/store/izzarhnylq2v55hi3a8pbhwpi5alhpg1-profile/bin/bash --version
+GNU bash, version 5.0.7(1)-release (x86_64-unknown-linux-gnu)
+Copyright (C) 2019 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+#+end_example
+
+#+begin_example
+dev_1@dev_1 ~/application.conf/resource$ which -a bash
+/home/dev_1/.guix-profile/bin/bash
+/run/current-system/profile/bin/bash
+dev_1@dev_1 ~/application.conf/resource$ ls -l /home/dev_1/.guix-profile/bin/bash
+lrwxrwxrwx 1 root root 71 Jan  1  1970 /home/dev_1/.guix-profile/bin/bash -> /gnu/store/chfwin3a4qp1znnpsjbmydr2jbzk0d6y-bash-minimal-5.1.8/bin/bash
+dev_1@dev_1 ~/application.conf/resource$ ls -l /run/current-system/profile/bin/bash
+lrwxrwxrwx 1 root root 63 Jan  1  1970 /run/current-system/profile/bin/bash -> /gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash
+dev_1@dev_1 ~/application.conf/resource$
+#+end_example
+**** DONE which bash accessible from env = other bash
+CLOSED: [2022-11-14 Mon 00:26]
+#+begin_example
+dev_1@dev_1 /mnt/recoverData/linuxProgram/workspace/spark-nlp-book [env]$ which -a bash
+/gnu/store/izzarhnylq2v55hi3a8pbhwpi5alhpg1-profile/bin/bash
+dev_1@dev_1 /mnt/recoverData/linuxProgram/workspace/spark-nlp-book [env]$ ls -l /gnu/store/izzarhnylq2v55hi3a8pbhwpi5alhpg1-profile/bin/bash
+lrwxrwxrwx 1 root root 71 Jan  1  1970 /gnu/store/izzarhnylq2v55hi3a8pbhwpi5alhpg1-profile/bin/bash -> /gnu/store/29jhbbg1hf557x8j53f9sxd9imlmf02a-bash-minimal-5.0.7/bin/bash
+
+#+end_example
+**** DONE why used bash fail
+CLOSED: [2022-11-14 Mon 00:26]
+***** DONE in guix env shell  = load .sh fail
+CLOSED: [2022-11-14 Mon 00:27]
+car load .sh, fail car miss some cmd in new guix env
+#+begin_example
+dev_1@dev_1 ~/application.conf/resource$ /gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash
+dev_1@dev_1 ~/application.conf/resource$
+
+dev_1@dev_1 /mnt/recoverData/linuxProgram/workspace/spark-nlp-book [env]$ /gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash
+which: no java in (/mnt/linuxProgram/ideaIC-2021.1.1/idea-IC-211.7142.45/bin/:/home/dev_1/.yarn/bin:/home/dev_1/.config/yarn/global/node_modules/.bin:/home/dev_1/opt/python-dev_3_7/bin:/home/dev_1/opt/python-dev_3_7/sbin:/mnt/linuxProgram/firefox-86.0.1/firefox/:/mnt/linuxProgram/emacs.d_downloaded/doom-emacs/bin:/mnt/linuxProgram/ideaIC-2021.1.1/idea-IC-211.7142.45/bin/:/home/dev_1/.yarn/bin:/home/dev_1/.config/yarn/global/node_modules/.bin:/home/dev_1/opt/python-dev_3_7/bin:/home/dev_1/opt/python-dev_3_7/sbin:/mnt/linuxProgram/firefox-86.0.1/firefox/:/mnt/linuxProgram/emacs.d_downloaded/doom-emacs/bin:/mnt/linuxProgram/ideaIC-2021.1.1/idea-IC-211.7142.45/bin/:/home/dev_1/.yarn/bin:/home/dev_1/.config/yarn/global/node_modules/.bin:/home/dev_1/opt/python-dev_3_7/bin:/home/dev_1/opt/python-dev_3_7/sbin:/mnt/linuxProgram/firefox-86.0.1/firefox/:/mnt/linuxProgram/emacs.d_downloaded/doom-emacs/bin:/mnt/linuxProgram/ideaIC-2021.1.1/idea-IC-211.7142.45/bin/:/gnu/store/izzarhnylq2v55hi3a8pbhwpi5alhpg1-profile/bin:/gnu/store/izzarhnylq2v55hi3a8pbhwpi5alhpg1-profile/sbin:/mnt/linuxProgram/spark-3.3.1-bin-hadoop3/bin:/home/dev_1/usr/bin:/home/dev_1/usr/local/bin/:/home/dev_1/.local/bin:/usr/bin:/mnt/linuxProgram/usr/local/bin/:/home/dev_1/.local/share/coursier/bin:/home/dev_1/.config/pnpm:/home/dev_1/.config/pnpm:/mnt/linuxProgram/spark-3.3.1-bin-hadoop3/bin:/home/dev_1/usr/bin:/home/dev_1/usr/local/bin/:/home/dev_1/.local/bin:/usr/bin:/mnt/linuxProgram/usr/local/bin/:/home/dev_1/.local/share/coursier/bin:/home/dev_1/.config/pnpm:/home/dev_1/.config/pnpm:/mnt/linuxProgram/spark-3.3.1-bin-hadoop3/bin:/home/dev_1/usr/bin:/home/dev_1/usr/local/bin/:/home/dev_1/.local/bin:/usr/bin:/mnt/linuxProgram/usr/local/bin/:/home/dev_1/.local/share/coursier/bin:/home/dev_1/.config/pnpm:/home/dev_1/.config/pnpm)
+readlink: missing operand
+Try 'readlink --help' for more information.
+dirname: missing operand
+Try 'dirname --help' for more information.
+dirname: missing operand
+Try 'dirname --help' for more information.
+# load .sh, fail car miss some cmd in new guix env
+
+dev_1@dev_1 /mnt/recoverData/linuxProgram/workspace/spark-nlp-book [env]$ /gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash --version
+GNU bash, version 5.1.8(1)-release (x86_64-unknown-linux-gnu)
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+#+end_example
+***** DONE in jupyter = wrapper overwrite .so
+CLOSED: [2022-11-14 Mon 00:28]
+#+begin_example
+dev_1@dev_1 /mnt/recoverData/linuxProgram/workspace/spark-nlp-book [env]$ pdm run ./wrapper /gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash --version
+/gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash: /home/dev_1/opt/python-dev_3_7/lib/libc.so.6: version `GLIBC_2.33' not found (required by /gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash)
+/gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash: /home/dev_1/opt/python-dev_3_7/lib/libc.so.6: version `GLIBC_2.33' not found (required by /gnu/store/wcwls45278gzpjvwlvrrs1y7h30g44xh-readline-8.1.1/lib/libreadline.so.8)
+/gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash: /home/dev_1/opt/python-dev_3_7/lib/libc.so.6: version `GLIBC_2.33' not found (required by /gnu/store/wcwls45278gzpjvwlvrrs1y7h30g44xh-readline-8.1.1/lib/libhistory.so.8)
+/gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash: /home/dev_1/opt/python-dev_3_7/lib/libc.so.6: version `GLIBC_2.33' not found (required by /gnu/store/9rrnm5hdjw7cy96a2a9rfgh6y08wsbmf-ncurses-6.2.20210619/lib/libncursesw.so.6)
+#+end_example
+**** TODO how jupyter choose bash
+***** DONE bash embeded in script = no
+CLOSED: [2022-11-14 Mon 00:37]
+- State "FAIL"       from              [2022-11-14 Mon 00:37]
+#+begin_example
+dev_1@dev_1 /mnt/recoverData/linuxProgram/workspace/spark-nlp-book [env]$ pdm run which jupyter
+/mnt/recoverData/linuxProgram/workspace/spark-nlp-book/.venv/bin/jupyter
+
+dev_1@dev_1 ~/application.conf/resource$ cat /mnt/recoverData/linuxProgram/workspace/spark-nlp-book/.venv/bin/jupyter
+#!/mnt/recoverData/linuxProgram/workspace/spark-nlp-book/.venv/bin/python
+# -*- coding: utf-8 -*-
+
+dev_1@dev_1 ~/application.conf/resource$ file /mnt/recoverData/linuxProgram/workspace/spark-nlp-book/.venv/bin/python
+/mnt/recoverData/linuxProgram/workspace/spark-nlp-book/.venv/bin/python: symbolic link to /home/dev_1/opt/python-dev_3_7/bin/python
+dev_1@dev_1 ~/application.conf/resource$ file /home/dev_1/opt/python-dev_3_7/bin/python
+/home/dev_1/opt/python-dev_3_7/bin/python: symbolic link to /gnu/store/1dzzq1ka3ifnqrlka984i5ysby8ghs3y-python-wrapper-3.7.4/bin/python
+dev_1@dev_1 ~/application.conf/resource$ file /gnu/store/1dzzq1ka3ifnqrlka984i5ysby8ghs3y-python-wrapper-3.7.4/bin/python
+/gnu/store/1dzzq1ka3ifnqrlka984i5ysby8ghs3y-python-wrapper-3.7.4/bin/python: symbolic link to /gnu/store/c0ysvb6s92kwwnmkgdhnspllxvd3f231-python-3.7.4/bin/python3
+dev_1@dev_1 ~/application.conf/resource$ file /gnu/store/c0ysvb6s92kwwnmkgdhnspllxvd3f231-python-3.7.4/bin/python3
+/gnu/store/c0ysvb6s92kwwnmkgdhnspllxvd3f231-python-3.7.4/bin/python3: symbolic link to python3.7
+dev_1@dev_1 ~/application.conf/resource$ which python3.7
+/home/dev_1/opt/python-dev_3_7/bin/python3.7
+dev_1@dev_1 ~/application.conf/resource$ which -a python3.7
+/home/dev_1/opt/python-dev_3_7/bin/python3.7
+/home/dev_1/opt/python-dev_3_7/bin/python3.7
+/home/dev_1/opt/python-dev_3_7/bin/python3.7
+dev_1@dev_1 ~/application.conf/resource$ file /home/dev_1/opt/python-dev_3_7/bin/python3.7
+/home/dev_1/opt/python-dev_3_7/bin/python3.7: symbolic link to /gnu/store/d7jmr2sd8lmlsghnnal13rn1i4c22xff-python-3.7.4/bin/python3.7
+dev_1@dev_1 ~/application.conf/resource$ file /gnu/store/d7jmr2sd8lmlsghnnal13rn1i4c22xff-python-3.7.4/bin/python3.7
+/gnu/store/d7jmr2sd8lmlsghnnal13rn1i4c22xff-python-3.7.4/bin/python3.7: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /gnu/store/ahqgl4h89xqj695lgqvsaf6zh2nhy4pj-glibc-2.29/lib/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, not stripped
+
+#+end_example
+***** TODO use bash of browser
+****** CANCEL choose browser of guix env
+CLOSED: [2022-11-14 Mon 00:39]
+
+- State "CANCEL"     from              [2022-11-14 Mon 00:39] \\
+  doit recompile => time
+**** TODO solv
+soit no overwrite LDLIB
+jupyter use le bon bash
+**** why no use env bash, but
