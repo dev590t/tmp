@@ -21,21 +21,31 @@
 # python dev env
 DEFAULT_CHANNELS=/tmp/default_channels.scm
 echo "%default-channels" > $DEFAULT_CHANNELS
-guix time-machine \
-    --url=https://git.savannah.gnu.org/git/guix.git --commit=c81457a5883ea43950eb2ecdcbb58a5b144bcd11 \
-    -C $DEFAULT_CHANNELS -- environment --pure \
-    libgccjit  python@3.7 glibc --ad-hoc python@3.7 which coreutils libgccjit git nss-certs zlib expat mesa glib
+
+PACKAGES="libgccjit  python@3.7 glibc --ad-hoc python@3.7 which coreutils libgccjit git nss-certs zlib expat mesa glib cmake gcc-toolchain"
 # runtime
 # python@3.7 => interpreter used by pyproject
 # libgccjit => ImportError: libstdc++.so.6: cannot open shared object file: No such file or directory. more info: fb83b9aa-23fe-4433-93fc-613b899c8e8f
 # mesa => cv2 => raylib
 # glib => libgthread-2.0.so.0 => cv2 => ray
 
+# cmake, gcc-toolchain => compile wheel
+
 # zlib => expected by pandas. more info: a29ff164-dfe1-43f2-afe1-16fbbcd53fce
 # expat => no sure if needed. more info: 155457e7-551a-497a-b275-c573df0d9228
 # ces package maybe is déjà in {which, coreutils}
 
 # {which, coreutils} => has some dep package essentiel for pandas sans trigger segment fault. dont {zlib,expat}. more info : c4a23500-e63a-45fb-955b-aa725d217963
+
+guix time-machine \
+    --url=https://git.savannah.gnu.org/git/guix.git --commit=c81457a5883ea43950eb2ecdcbb58a5b144bcd11 \
+    -C $DEFAULT_CHANNELS -- environment --pure $PACKAGES
+
+# install in profile to protect against guix gc => avoid rebuild
+guix time-machine \
+    --url=https://git.savannah.gnu.org/git/guix.git --commit=c81457a5883ea43950eb2ecdcbb58a5b144bcd11 \
+    -C $DEFAULT_CHANNELS -- install $PACKAGES -p ~/opt/python-dev_3_7
+
 
 # for PDM dev tool
 # git => git dep, git branch
