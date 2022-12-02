@@ -102,6 +102,9 @@ dev_1@dev_1 /mnt/recoverData/linuxProgram/workspace/spark-nlp-book [env]$ pdm ru
 /gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash: /home/dev_1/opt/python-dev_3_7/lib/libc.so.6: version `GLIBC_2.33' not found (required by /gnu/store/wcwls45278gzpjvwlvrrs1y7h30g44xh-readline-8.1.1/lib/libhistory.so.8)
 /gnu/store/d99ykvj3axzzidygsmdmzxah4lvxd6hw-bash-5.1.8/bin/bash: /home/dev_1/opt/python-dev_3_7/lib/libc.so.6: version `GLIBC_2.33' not found (required by /gnu/store/9rrnm5hdjw7cy96a2a9rfgh6y08wsbmf-ncurses-6.2.20210619/lib/libncursesw.so.6)
 #+end_example
+**** DONE run jupyter in normal profile = no pb
+CLOSED: [2022-11-14 Mon 13:38]
+! ls # runnable
 **** TODO how jupyter choose bash
 ***** DONE bash embeded in script = no
 CLOSED: [2022-11-14 Mon 00:37]
