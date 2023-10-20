@@ -3,7 +3,7 @@ DEFAULT_CHANNELS=/tmp/default_channels.scm
 echo "%default-channels" > $DEFAULT_CHANNELS
 # TODO non guix derivation fail with time-machine
 # guix time-machine --commit=472706ae2f9160833951a4e4bcc4c206e03097b0 -C $DEFAULT_CHANNELS -- install -p .t ${PACKAGES}[*]
-guix time-machine --commit=472706ae2f9160833951a4e4bcc4c206e03097b0 -C $DEFAULT_CHANNELS -- shell --expose=$HOME/.local/ -F --preserve='^DISPLAY$' --share=$HOME/.cache -N --expose=/etc/machine-id --container python python-pandas gcc:lib nss nss-certs -D icecat
+guix time-machine --commit=472706ae2f9160833951a4e4bcc4c206e03097b0 -C $DEFAULT_CHANNELS -- shell --expose=$HOME/.local/ -F --preserve='^DISPLAY$' --share=$HOME/.cache -N --expose=/etc/machine-id --container python python-pandas gcc:lib nss nss-certs curl -D icecat
 export PATH="$PATH:$HOME/.local/bin"
 export PLAYWRIGHT_SKIP_BROWSER_GC=1
 
