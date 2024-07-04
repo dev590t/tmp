@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+
+# precondition
+# $ xhost +
+# access control disabled, clients can connect from any host
+
 PACKAGES=(python gcc-toolchain nss nss-certs pandoc curl)
 PACKAGES_D=(icecat python-pandas)
 
