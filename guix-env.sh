@@ -4,12 +4,7 @@
 # $ xhost +
 # access control disabled, clients can connect from any host
 
-PACKAGES=(python gcc-toolchain nss nss-certs pandoc curl)
-PACKAGES_D=(icecat python-pandas)
-
-guix shell --expose=$HOME/.local/ --share=$HOME/.local/state/ -CNF --preserve='^DISPLAY$' --share=$HOME/.cache --expose=/etc/machine-id ${PACKAGES[*]} -D ${PACKAGES_D[*]}
-export PATH="$PATH:$HOME/.local/bin" # PDM_BIN_DIR
-export PLAYWRIGHT_SKIP_BROWSER_GC=1
+guix shell -m manifest.scm --expose=$HOME/.local/ --share=$HOME/.local/state/ -CNF --preserve='^DISPLAY$' --share=$HOME/.cache --expose=/etc/machine-id -- env PATH="$PATH:$HOME/.local/bin" PLAYWRIGHT_SKIP_BROWSER_GC=1 bash
 
 # for PDM dev tool
 # git => git dep, git branch
