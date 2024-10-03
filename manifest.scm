@@ -10,6 +10,7 @@
                 "nss-certs"
                 "pandoc"
                 "curl"
+                "git" ;; for pdm add git+https://
                 "python-pandas"))
         (package->development-manifest
           (specification->package "icecat"))))
