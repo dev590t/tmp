@@ -1,0 +1,13 @@
+{
+  "base_url": "https://www.doctolib.fr/search?location=75012-paris&speciality=gastro-enterologue&availabilitiesBefore=14",
+  "max_pages": 3,
+  "output": {
+    "json_file": "doctolib_doctors.json",
+    "csv_file": "doctolib_doctors.csv"
+  },
+  "scraping": {
+    "delay_between_pages": 2,
+    "page_timeout": 30000,
+    "headless": true
+  }
+}
