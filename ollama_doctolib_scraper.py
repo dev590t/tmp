@@ -50,7 +50,7 @@ class OllamaDoctolibScraper:
         self.extraction_schema = None
         
         self.browser_config = BrowserConfig(
-            headless=True,
+            headless=False,
             verbose=True
         )
         

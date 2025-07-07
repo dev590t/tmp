@@ -12,7 +12,7 @@ async def debug_doctolib_page():
     url = "https://www.doctolib.fr/search?location=75012-paris&speciality=gastro-enterologue&availabilitiesBefore=14&page=1"
     
     browser_config = BrowserConfig(
-        headless=True,
+        headless=False,
         verbose=True
     )
     

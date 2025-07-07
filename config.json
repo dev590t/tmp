@@ -8,6 +8,6 @@
   "scraping": {
     "delay_between_pages": 2,
     "page_timeout": 30000,
-    "headless": true
+    "headless": false
   }
 }

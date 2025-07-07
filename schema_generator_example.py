@@ -20,7 +20,7 @@ async def generate_doctolib_schema():
     # Sample Doctolib URL
     url = "https://www.doctolib.fr/search?location=75012-paris&speciality=gastro-enterologue&availabilitiesBefore=14&page=1"
     
-    browser_config = BrowserConfig(headless=True, verbose=True)
+    browser_config = BrowserConfig(headless=False, verbose=True)
     
     # JavaScript to handle cookie consent
     js_code = """
@@ -128,7 +128,7 @@ async def test_generated_schema(schema):
     
     url = "https://www.doctolib.fr/search?location=75012-paris&speciality=gastro-enterologue&availabilitiesBefore=14&page=1"
     
-    browser_config = BrowserConfig(headless=True, verbose=True)
+    browser_config = BrowserConfig(headless=False, verbose=True)
     
     js_code = """
     (async () => {

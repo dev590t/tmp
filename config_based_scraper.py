@@ -36,7 +36,7 @@ def validate_config(config: dict) -> dict:
     config.setdefault('scraping', {})
     config['scraping'].setdefault('delay_between_pages', 2)
     config['scraping'].setdefault('page_timeout', 30000)
-    config['scraping'].setdefault('headless', True)
+    config['scraping'].setdefault('headless', False)
     
     # Validate values
     if config['max_pages'] < 1:

@@ -48,7 +48,7 @@ class DoctolibScraper:
         self.doctors: List[Doctor] = []
         
         self.browser_config = BrowserConfig(
-            headless=True,
+            headless=False,
             verbose=True
         )
         
