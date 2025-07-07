@@ -2,13 +2,14 @@
 
 A professional web scraper for extracting doctor information from Doctolib using crawl4ai. This scraper is designed to be configurable, respectful to the website, and easy to use.
 
-## 🆕 NEW: Ollama-Powered Schema Generation
+## 🆕 NEW: Multi-LLM Schema Generation
 
-The latest version includes **automatic schema generation using Ollama LLM**! This provides:
+The latest version includes **automatic schema generation using multiple LLM providers**! This provides:
 - **🧠 One-time schema generation** that creates reusable extraction schemas
 - **⚡ LLM-free extractions** after initial schema creation
 - **🎯 Improved accuracy** through AI-powered page structure analysis
-- **💰 No API costs** when using local Ollama models
+- **🔧 Multiple LLM Options**: Groq (default), OpenAI, or local Ollama models
+- **💰 Cost-effective**: Default Groq integration with built-in API key
 
 ## Features
 
@@ -21,10 +22,11 @@ The latest version includes **automatic schema generation using Ollama LLM**! Th
 - ✅ **Command Line Interface**: Easy to use from command line with arguments
 
 ### AI-Powered Features
-- 🧠 **Ollama Integration**: Uses local LLM for intelligent schema generation
+- 🧠 **Multi-LLM Support**: Groq (default), OpenAI, or Ollama integration
 - 📋 **Schema Reuse**: Save and reuse generated schemas for fast extractions
 - 🔄 **Fallback Support**: Manual schema fallback if LLM generation fails
 - 🎯 **Smart Analysis**: AI analyzes page structure to create optimal selectors
+- 🔧 **Configurable LLM**: Parametrable LLM provider, model, and API keys
 
 ## Installation
 
@@ -115,22 +117,28 @@ You can also use the configuration file approach:
 python config_based_scraper.py
 ```
 
-### 🧠 Ollama-Powered Usage (Recommended)
+### 🧠 AI-Powered Usage (Recommended)
 
-The new Ollama-powered scraper provides better accuracy through AI-generated schemas:
+The new LLM-powered scraper provides better accuracy through AI-generated schemas:
 
 ```bash
-# Basic usage with Ollama (generates schema automatically)
-python ollama_doctolib_scraper.py --url "https://www.doctolib.fr/search?location=75012-paris&speciality=gastro-enterologue"
+# Basic usage with default Groq LLM (generates schema automatically)
+python llm_doctolib_scraper.py --url "https://www.doctolib.fr/search?location=75012-paris&speciality=gastro-enterologue"
 
-# Use different Ollama model
-python ollama_doctolib_scraper.py --url "URL" --model llama3.1 --pages 5
+# Use different Groq model
+python llm_doctolib_scraper.py --url "URL" --llm-model "meta-llama/llama-3.1-70b-versatile" --pages 5
+
+# Use OpenAI GPT-4
+python llm_doctolib_scraper.py --url "URL" --llm-provider openai --llm-model gpt-4 --llm-api-key YOUR_OPENAI_KEY
+
+# Use local Ollama model
+python llm_doctolib_scraper.py --url "URL" --llm-provider ollama --llm-model llama3.2
 
 # Load existing schema (skip generation for faster execution)
-python ollama_doctolib_scraper.py --url "URL" --load-schema doctolib_schema.json
+python llm_doctolib_scraper.py --url "URL" --load-schema doctolib_schema.json
 
 # Generate and save schema for reuse
-python ollama_doctolib_scraper.py --url "URL" --save-schema my_schema.json
+python llm_doctolib_scraper.py --url "URL" --save-schema my_schema.json
 ```
 
 ### Schema Generation Example
@@ -157,12 +165,14 @@ This will:
 - `--json`: Output JSON filename (default: doctolib_doctors.json)
 - `--csv`: Output CSV filename (default: doctolib_doctors.csv)
 
-### Ollama-Powered Scraper (`ollama_doctolib_scraper.py`)
+### LLM-Powered Scraper (`llm_doctolib_scraper.py`)
 - `--url`: Base URL for Doctolib search (required)
 - `--pages`: Number of pages to scrape (default: 3)
-- `--model`: Ollama model to use (default: llama3.2)
-- `--json`: Output JSON filename (default: ollama_doctors.json)
-- `--csv`: Output CSV filename (default: ollama_doctors.csv)
+- `--llm-provider`: LLM provider to use (default: groq, options: groq, openai, ollama)
+- `--llm-model`: LLM model to use (default: meta-llama/llama-4-scout-17b-16e-instruct)
+- `--llm-api-key`: API key for the LLM provider (default: built-in Groq key)
+- `--json`: Output JSON filename (default: llm_doctors.json)
+- `--csv`: Output CSV filename (default: llm_doctors.csv)
 - `--save-schema`: Save generated schema to file (default: doctolib_schema.json)
 - `--load-schema`: Load existing schema from file (skips generation)
 

@@ -50,7 +50,7 @@ class LLMDoctolibScraper:
         self.extraction_schema = None
         
         self.browser_config = BrowserConfig(
-            headless=False,
+            headless=True,
             verbose=True
         )
         
@@ -101,10 +101,9 @@ class LLMDoctolibScraper:
         Get default LLM configuration using Groq's Llama-4-Scout model
         """
         return LLMConfig(
-            provider="groq",
-            api_key="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",
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
-            temperature=0.1,
+            provider="groq/meta-llama/llama-4-scout-17b-16e-instruct",
+            api_token="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",
+            temprature=0.1,
             max_tokens=4000
         )
     
@@ -128,7 +127,7 @@ class LLMDoctolibScraper:
         Generate extraction schema using Ollama LLM by analyzing the first page
         This is a one-time cost that creates a reusable schema
         """
-        print(f"🧠 Generating extraction schema using Ollama model: {self.ollama_model}")
+        print(f"🧠 Generating extraction schema using LLM: {self.llm_config.provider}")
         
         # First, get a sample page to analyze
         sample_url = self._build_page_url(1)
@@ -150,7 +149,7 @@ class LLMDoctolibScraper:
                 
                 print("✅ Sample page loaded successfully")
                 
-                print(f"🔄 Analyzing page structure with {self.llm_config.provider} {self.llm_config.model}...")
+                print(f"🔄 Analyzing page structure with {self.llm_config.provider}...")
                 
                 # Generate schema using the sample HTML
                 schema = JsonCssExtractionStrategy.generate_schema(
@@ -289,7 +288,7 @@ class LLMDoctolibScraper:
         """Scrape all pages using the Ollama-generated schema"""
         print(f"🚀 Starting Ollama-powered scraping of {self.max_pages} pages from Doctolib")
         print(f"🔗 Base URL: {self.base_url}")
-        print(f"🧠 Using Ollama model: {self.ollama_model}")
+        print(f"🧠 Using LLM: {self.llm_config.provider}")
         
         # Generate schema first (one-time cost)
         await self.generate_extraction_schema()
@@ -366,7 +365,7 @@ class LLMDoctolibScraper:
         print(f"{'='*60}")
         print(f"Total doctors found: {len(self.doctors)}")
         print(f"Pages scraped: {self.max_pages}")
-        print(f"Ollama model used: {self.ollama_model}")
+        print(f"LLM used: {self.llm_config.provider}")
         
         # Count specialties
         specialties = {}
@@ -501,16 +500,18 @@ async def main():
         if not api_key and args.llm_provider == 'groq':
             api_key = "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"
         
-        LLM_CONFIG = LLMConfig(
-            provider=args.llm_provider,
-            api_key=api_key,
-            model=args.llm_model,
-            temperature=0.1,
-            max_tokens=4000
-        ) if args.llm_provider != 'ollama' or api_key else LLMConfig(
-            provider=f"ollama/{args.llm_model}",
-            api_token=None
-        )
+        if args.llm_provider == 'ollama':
+            LLM_CONFIG = LLMConfig(
+                provider=f"ollama/{args.llm_model}",
+                api_token=None
+            )
+        else:
+            LLM_CONFIG = LLMConfig(
+                provider=f"{args.llm_provider}/{args.llm_model}",
+                api_token=api_key,
+                temprature=0.1,
+                max_tokens=4000
+            )
         
         print("🔧 Using command line configuration:")
         print(f"   URL: {BASE_URL}")

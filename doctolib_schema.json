@@ -1,0 +1,31 @@
+{
+  "name": "doctors",
+  "baseSelector": "div:has(h2 button)",
+  "fields": [
+    {
+      "name": "name",
+      "selector": "h2 button",
+      "type": "text"
+    },
+    {
+      "name": "specialty",
+      "selector": "p",
+      "type": "text"
+    },
+    {
+      "name": "address",
+      "selector": "p:contains('Rue'), p:contains('Boulevard'), p:contains('Avenue')",
+      "type": "text"
+    },
+    {
+      "name": "distance",
+      "selector": "span:contains('km')",
+      "type": "text"
+    },
+    {
+      "name": "sector_info",
+      "selector": "p:contains('Conventionné')",
+      "type": "text"
+    }
+  ]
+}
