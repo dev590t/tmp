@@ -2,8 +2,17 @@
 
 A professional web scraper for extracting doctor information from Doctolib using crawl4ai. This scraper is designed to be configurable, respectful to the website, and easy to use.
 
+## 🆕 NEW: Ollama-Powered Schema Generation
+
+The latest version includes **automatic schema generation using Ollama LLM**! This provides:
+- **🧠 One-time schema generation** that creates reusable extraction schemas
+- **⚡ LLM-free extractions** after initial schema creation
+- **🎯 Improved accuracy** through AI-powered page structure analysis
+- **💰 No API costs** when using local Ollama models
+
 ## Features
 
+### Core Features
 - ✅ **Configurable Parameters**: URL and number of pages can be easily configured
 - ✅ **Multiple Output Formats**: Saves data in both JSON and CSV formats
 - ✅ **Respectful Scraping**: Includes delays between requests and handles cookie consent
@@ -11,7 +20,15 @@ A professional web scraper for extracting doctor information from Doctolib using
 - ✅ **Clean Data Extraction**: Properly extracts and cleans doctor information
 - ✅ **Command Line Interface**: Easy to use from command line with arguments
 
+### AI-Powered Features
+- 🧠 **Ollama Integration**: Uses local LLM for intelligent schema generation
+- 📋 **Schema Reuse**: Save and reuse generated schemas for fast extractions
+- 🔄 **Fallback Support**: Manual schema fallback if LLM generation fails
+- 🎯 **Smart Analysis**: AI analyzes page structure to create optimal selectors
+
 ## Installation
+
+### Basic Installation
 
 1. Install the required dependencies:
 ```bash
@@ -22,6 +39,33 @@ pip install crawl4ai
 ```bash
 playwright install
 playwright install-deps
+```
+
+### Ollama Installation (for AI-powered schema generation)
+
+3. Install Ollama (for AI-powered features):
+```bash
+# On macOS
+brew install ollama
+
+# On Linux
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# On Windows
+# Download from https://ollama.ai/download
+```
+
+4. Pull a model (recommended: llama3.2):
+```bash
+ollama pull llama3.2
+# or
+ollama pull llama3.1
+ollama pull codellama
+```
+
+5. Start Ollama service:
+```bash
+ollama serve
 ```
 
 ## Usage
@@ -71,12 +115,56 @@ You can also use the configuration file approach:
 python config_based_scraper.py
 ```
 
+### 🧠 Ollama-Powered Usage (Recommended)
+
+The new Ollama-powered scraper provides better accuracy through AI-generated schemas:
+
+```bash
+# Basic usage with Ollama (generates schema automatically)
+python ollama_doctolib_scraper.py --url "https://www.doctolib.fr/search?location=75012-paris&speciality=gastro-enterologue"
+
+# Use different Ollama model
+python ollama_doctolib_scraper.py --url "URL" --model llama3.1 --pages 5
+
+# Load existing schema (skip generation for faster execution)
+python ollama_doctolib_scraper.py --url "URL" --load-schema doctolib_schema.json
+
+# Generate and save schema for reuse
+python ollama_doctolib_scraper.py --url "URL" --save-schema my_schema.json
+```
+
+### Schema Generation Example
+
+To understand how schema generation works:
+
+```bash
+# Run the schema generation example
+python schema_generator_example.py
+```
+
+This will:
+1. Load a sample Doctolib page
+2. Use Ollama to analyze the page structure
+3. Generate a CSS extraction schema
+4. Test the schema and save results
+5. Save the schema for reuse
+
 ## Command Line Arguments
 
+### Standard Scraper (`final_doctolib_scraper.py`)
 - `--url`: Base URL for Doctolib search (required)
 - `--pages`: Number of pages to scrape (default: 3)
 - `--json`: Output JSON filename (default: doctolib_doctors.json)
 - `--csv`: Output CSV filename (default: doctolib_doctors.csv)
+
+### Ollama-Powered Scraper (`ollama_doctolib_scraper.py`)
+- `--url`: Base URL for Doctolib search (required)
+- `--pages`: Number of pages to scrape (default: 3)
+- `--model`: Ollama model to use (default: llama3.2)
+- `--json`: Output JSON filename (default: ollama_doctors.json)
+- `--csv`: Output CSV filename (default: ollama_doctors.csv)
+- `--save-schema`: Save generated schema to file (default: doctolib_schema.json)
+- `--load-schema`: Load existing schema from file (skips generation)
 
 ## Output Format
 
@@ -128,12 +216,44 @@ Example URLs:
 - **Rate Limiting**: 2-second delay between page requests
 - **Error Recovery**: Continues scraping even if individual pages fail
 
+## Available Scrapers
+
+This repository includes multiple scraper implementations:
+
+### 1. 🧠 `ollama_doctolib_scraper.py` (Recommended)
+- **AI-powered schema generation** using Ollama
+- **Best accuracy** through intelligent page analysis
+- **Reusable schemas** for fast subsequent extractions
+- **No API costs** (uses local Ollama models)
+
+### 2. 🔧 `final_doctolib_scraper.py` (Standard)
+- **Manual CSS selectors** with robust fallbacks
+- **No dependencies** on external AI services
+- **Proven reliability** with extensive testing
+- **Fast execution** (no schema generation overhead)
+
+### 3. ⚙️ `config_based_scraper.py` (Configuration-driven)
+- **JSON configuration** for easy parameter management
+- **Batch processing** support
+- **Template-based** approach
+
+### 4. 🔍 `debug_scraper.py` (Development)
+- **Debug mode** with HTML output
+- **Troubleshooting** website structure changes
+- **Development** and testing tool
+
+### 5. 📚 `schema_generator_example.py` (Educational)
+- **Learn** how schema generation works
+- **Understand** Ollama integration
+- **Test** schema creation process
+
 ## Limitations and Considerations
 
 - **Respectful Usage**: The scraper includes delays and respects robots.txt
 - **Website Changes**: May need updates if Doctolib changes their HTML structure
 - **Rate Limiting**: Don't scrape too aggressively to avoid being blocked
 - **Legal Compliance**: Ensure your usage complies with Doctolib's terms of service
+- **Ollama Requirement**: AI-powered features require Ollama installation and models
 
 ## Troubleshooting
 
@@ -151,6 +271,12 @@ Example URLs:
 3. **Permission errors**:
    - Ensure you have write permissions in the output directory
 
+4. **Ollama-specific issues**:
+   - **Ollama not running**: Make sure `ollama serve` is running
+   - **Model not found**: Pull the model with `ollama pull llama3.2`
+   - **Schema generation fails**: Try a different model or use `--load-schema` with a manual schema
+   - **Connection errors**: Check if Ollama is accessible on localhost:11434
+
 ### Debug Mode
 
 For debugging, you can use the debug scraper:
@@ -160,13 +286,29 @@ python debug_scraper.py
 
 This will save the raw HTML content for inspection.
 
+For Ollama debugging, use the schema generator example:
+```bash
+python schema_generator_example.py
+```
+
+This will show the schema generation process step by step.
+
 ## Files in this Package
 
-- `final_doctolib_scraper.py`: Main scraper with command line interface
-- `config_based_scraper.py`: Configuration file-based scraper
+### Core Scrapers
+- `ollama_doctolib_scraper.py`: 🧠 AI-powered scraper with Ollama schema generation (Recommended)
+- `final_doctolib_scraper.py`: 🔧 Standard scraper with manual CSS selectors
+- `config_based_scraper.py`: ⚙️ Configuration file-based scraper
+
+### Utilities and Examples
+- `schema_generator_example.py`: 📚 Educational example showing schema generation
+- `debug_scraper.py`: 🔍 Debug version for troubleshooting
+- `example_usage.py`: 📖 Programmatic usage examples
+
+### Configuration and Documentation
 - `config.json`: Example configuration file
-- `debug_scraper.py`: Debug version for troubleshooting
-- `README.md`: This documentation file
+- `README.md`: This comprehensive documentation
+- `pyproject.toml`: Project dependencies
 
 ## Example Output
 
