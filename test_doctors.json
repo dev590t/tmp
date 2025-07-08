@@ -1,0 +1,97 @@
+[
+  {
+    "name": "Dr Ariane Chryssostalis",
+    "distance": "3,2 km",
+    "insurance": "Conventionné secteur 2 avec OPTAM"
+  },
+  {
+    "name": "Dr Christian REVOL",
+    "distance": null,
+    "insurance": "Conventionné secteur 2"
+  },
+  {
+    "name": "Dr Natanel BENABOU",
+    "distance": "3,2 km",
+    "insurance": "Conventionné secteur 2"
+  },
+  {
+    "name": "Dr Karim CHAOUCHI",
+    "distance": "3,4 km",
+    "insurance": "Conventionné secteur 1"
+  },
+  {
+    "name": "Dr Widad BENDIB",
+    "distance": "3,4 km",
+    "insurance": "Conventionné secteur 2"
+  },
+  {
+    "name": "Dr Jeanne BELLOC",
+    "distance": "3,4 km",
+    "insurance": "Conventionné secteur 2 avec OPTAM"
+  },
+  {
+    "name": "Dr Robert CHOLLET",
+    "distance": "5,4 km",
+    "insurance": null
+  },
+  {
+    "name": "Dr Gilles LESUR",
+    "distance": "7,1 km",
+    "insurance": "Conventionné secteur 2"
+  },
+  {
+    "name": "Dr Nadia Fathallah",
+    "distance": "7,4 km",
+    "insurance": "Conventionné secteur 2 avec OPTAM"
+  },
+  {
+    "name": "Dr Paul BENFREDJ",
+    "distance": "7,5 km",
+    "insurance": "Conventionné secteur 2"
+  },
+  {
+    "name": "Dr Rim HASSAN",
+    "distance": "7,7 km",
+    "insurance": "Conventionné secteur 2"
+  },
+  {
+    "name": "Dr Anne KERLIRZIN",
+    "distance": "8,3 km",
+    "insurance": "Conventionné secteur 1"
+  },
+  {
+    "name": "Dr THOMAS SEVERYNS",
+    "distance": "8,3 km",
+    "insurance": "Conventionné secteur 2"
+  },
+  {
+    "name": "Centre de Santé Saint-Jacques",
+    "distance": "8,7 km",
+    "insurance": "Conventionné secteur 1"
+  },
+  {
+    "name": "Dr JEAN FRANCOIS DUFRESNE",
+    "distance": "8,8 km",
+    "insurance": "Conventionné secteur 2 avec OPTAM"
+  },
+  {
+    "name": "Dr David ANCEL",
+    "distance": "8,8 km",
+    "insurance": "Conventionné secteur 2"
+  },
+  {
+    "name": "Polyclinique d'Aubervilliers",
+    "distance": "8,9 km",
+    "insurance": null
+  },
+  {
+    "name": "Dr elise chanteloup",
+    "distance": "9,0 km",
+    "insurance": "Conventionné secteur 2"
+  },
+  {
+    "name": "Dr Alia MAMI",
+    "distance": "9,1 km",
+    "insurance": null
+  }
+]
