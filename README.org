@@ -1,6 +1,0 @@
-#+title: Readme
-** spec
-interpreter version
-compatible with colab
-
-dep has all lib needed for dev
