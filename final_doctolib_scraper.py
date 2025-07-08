@@ -9,6 +9,7 @@ from typing import List, Dict, Optional
 from dataclasses import dataclass
 from urllib.parse import urljoin
 from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
+from crawl4ai.extraction_strategy import JsonCssExtractionStrategy
 
 
 @dataclass
@@ -18,8 +19,9 @@ class Doctor:
     specialty: str
     address: str
     distance: Optional[str] = None
-    sector_info: Optional[str] = None
-    profile_url: Optional[str] = None
+    image: Optional[str] = None
+    insurance: Optional[str] = None
+    consultation: Optional[str] = None
     
     def to_dict(self) -> Dict:
         return {
@@ -27,8 +29,9 @@ class Doctor:
             'specialty': self.specialty,
             'address': self.address,
             'distance': self.distance,
-            'sector_info': self.sector_info,
-            'profile_url': self.profile_url
+            'image': self.image,
+            'insurance': self.insurance,
+            'consultation': self.consultation
         }
 
 
@@ -48,9 +51,25 @@ class DoctolibScraper:
         self.doctors: List[Doctor] = []
         
         self.browser_config = BrowserConfig(
-            headless=False,
+            headless=True,
             verbose=True
         )
+        
+        # Define the extraction schema based on actual Doctolib structure
+        # Looking at the HTML, each doctor card is in a div that contains both an img and h2 button
+        self.extraction_schema = {
+            'name': 'Gastro-entérologues et hépatologues',
+            'baseSelector': 'div:has(img.w-48):has(h2 button)',
+            'fields': [
+                {'name': 'name', 'selector': 'h2 button', 'type': 'text'},
+                {'name': 'image', 'selector': 'img.w-48', 'type': 'attribute', 'attribute': 'src'},
+                {'name': 'distance', 'selector': 'span:contains("km")', 'type': 'text'},
+                {'name': 'specialty', 'selector': 'p', 'type': 'text'},
+                {'name': 'address', 'selector': 'p:contains("Rue"), p:contains("Boulevard"), p:contains("Avenue"), p:contains("Place"), p:contains("Paris")', 'type': 'text'},
+                {'name': 'insurance', 'selector': 'p:contains("Conventionné")', 'type': 'text'},
+                {'name': 'consultation', 'selector': 'button:contains("Prendre")', 'type': 'text'}
+            ]
+        }
         
         # JavaScript to handle cookie consent and page interactions
         self.js_code = """
@@ -120,76 +139,56 @@ class DoctolibScraper:
         return text
     
     def _extract_doctors_from_html(self, html: str) -> List[Doctor]:
-        """Extract doctors from the cleaned HTML"""
+        """Extract doctors from the cleaned HTML using improved regex patterns"""
         doctors = []
         
-        # Split by doctor entries - each starts with h2 button containing name
-        doctor_pattern = r'<h2><button[^>]*>(.*?)</button></h2>(.*?)(?=<h2><button>|$)'
-        matches = re.findall(doctor_pattern, html, re.DOTALL | re.IGNORECASE)
+        # Look for doctor card patterns based on the actual HTML structure
+        # Each doctor card contains an image, name in h2>button, specialty, address, and insurance info
+        doctor_pattern = r'<img[^>]*class="w-48[^"]*"[^>]*src="([^"]*)"[^>]*>.*?<h2><button>([^<]+)</button></h2>.*?(?:<div><span>([^<]*km[^<]*)</span></div>)?.*?<p>([^<]+)</p>.*?<p>([^<]+)</p>.*?<p>([^<]+)</p>.*?(?:<p>(Conventionné[^<]*)</p>)?'
         
-        for name_raw, content in matches:
+        matches = re.findall(doctor_pattern, html, re.DOTALL | re.IGNORECASE)
+        print(f"🔍 Complex regex found {len(matches)} matches")
+        
+        for match in matches:
             try:
-                name = self._clean_text(name_raw)
-                if not name:
+                image, name, distance, specialty, address1, address2, insurance = match
+                
+                # Clean and process the extracted data
+                name = self._clean_text(name).strip()
+                if not name or name in ['Notre entreprise', 'Doctolib']:
                     continue
                 
-                # Extract specialty - first <p> tag after name
-                specialty = "Unknown"
-                specialty_match = re.search(r'<p>(.*?)</p>', content)
-                if specialty_match:
-                    specialty = self._clean_text(specialty_match.group(1))
+                specialty = self._clean_text(specialty).strip()
+                if not specialty or 'Questions fréquentes' in specialty:
+                    specialty = "Gastro-entérologue et hépatologue"
                 
-                # Extract address components
+                # Combine address parts
                 address_parts = []
+                if address1:
+                    addr1 = self._clean_text(address1).strip()
+                    if addr1 and not any(skip in addr1.lower() for skip in ['questions', 'doctolib', 'résultats']):
+                        address_parts.append(addr1)
                 
-                # Look for street addresses
-                street_patterns = [
-                    r'<p>(\d+[^<]*(?:Rue|Boulevard|Avenue|Place|Square)[^<]*)</p>',
-                    r'<p>([^<]*(?:Rue|Boulevard|Avenue|Place|Square)[^<]*)</p>'
-                ]
-                
-                for pattern in street_patterns:
-                    matches = re.findall(pattern, content, re.IGNORECASE)
-                    for match in matches:
-                        clean_addr = self._clean_text(match)
-                        if clean_addr and clean_addr not in address_parts:
-                            address_parts.append(clean_addr)
-                
-                # Look for postal code + city
-                postal_pattern = r'<p>(\d{5}\s+[^<]+)</p>'
-                postal_matches = re.findall(postal_pattern, content)
-                for match in postal_matches:
-                    clean_postal = self._clean_text(match)
-                    if clean_postal and clean_postal not in address_parts:
-                        address_parts.append(clean_postal)
+                if address2:
+                    addr2 = self._clean_text(address2).strip()
+                    if addr2 and not any(skip in addr2.lower() for skip in ['questions', 'doctolib', 'résultats']):
+                        address_parts.append(addr2)
                 
                 address = ", ".join(address_parts) if address_parts else "Unknown"
                 
-                # Extract distance
-                distance = None
-                distance_match = re.search(r'<span>([^<]*km[^<]*)</span>', content)
-                if distance_match:
-                    distance = self._clean_text(distance_match.group(1))
-                
-                # Extract sector information - look for "Conventionné" info
-                sector_info = None
-                sector_patterns = [
-                    r'<p>(Conventionné[^<]*)</p>',
-                    r'<p>(Établissement[^<]*)</p>'
-                ]
-                
-                for pattern in sector_patterns:
-                    sector_match = re.search(pattern, content, re.IGNORECASE)
-                    if sector_match:
-                        sector_info = self._clean_text(sector_match.group(1))
-                        break
+                # Clean other fields
+                distance = self._clean_text(distance).strip() if distance else None
+                insurance = self._clean_text(insurance).strip() if insurance else None
+                image = image.strip() if image else None
                 
                 doctor = Doctor(
                     name=name,
                     specialty=specialty,
                     address=address,
                     distance=distance,
-                    sector_info=sector_info
+                    image=image,
+                    insurance=insurance,
+                    consultation=None  # Not easily extractable with this pattern
                 )
                 
                 doctors.append(doctor)
@@ -198,10 +197,79 @@ class DoctolibScraper:
                 print(f"Error parsing doctor: {e}")
                 continue
         
+        # If the regex approach didn't work well, try a simpler approach
+        if len(doctors) < 10:  # Expect at least 10 doctors per page
+            print("🔄 Using fallback extraction method...")
+            doctors = self._extract_doctors_simple_pattern(html)
+        
         return doctors
     
+    def _extract_doctors_simple_pattern(self, html: str) -> List[Doctor]:
+        """Fallback extraction using simpler patterns"""
+        doctors = []
+        
+        # Find all h2 button elements (doctor names)
+        name_pattern = r'<h2><button>([^<]+)</button></h2>'
+        names = re.findall(name_pattern, html)
+        
+        # Find all images with doctor avatars
+        image_pattern = r'<img[^>]*src="([^"]*(?:doctor_avatar|upload)[^"]*)"[^>]*>'
+        images = re.findall(image_pattern, html)
+        
+        # Find distance information
+        distance_pattern = r'<span>([^<]*km[^<]*)</span>'
+        distances = re.findall(distance_pattern, html)
+        
+        # Find insurance information
+        insurance_pattern = r'<p>(Conventionné[^<]*)</p>'
+        insurances = re.findall(insurance_pattern, html)
+        print(f"🔍 Found {len(insurances)} insurance entries: {insurances[:3]}")
+        
+        # Find address information (look for patterns with street names)
+        address_pattern = r'<p>([^<]*(?:Rue|Boulevard|Avenue|Place)[^<]*)</p>'
+        addresses = re.findall(address_pattern, html)
+        
+        # Combine the data (this is approximate since we can't perfectly match them)
+        print(f"🔍 Found {len(names)} names, {len(addresses)} addresses, {len(distances)} distances, {len(images)} images")
+        
+        # Filter out non-doctor names first
+        skip_terms = ['Notre entreprise', 'Doctolib', 'Questions', 'Recherches', 'Pour les', 'Centre d\'aide', 'Utiliser', 'Mot de passe', 'Prendre et confirmer']
+        filtered_names = []
+        for name in names:
+            clean_name = self._clean_text(name).strip()
+            if clean_name and not any(term in clean_name for term in skip_terms):
+                filtered_names.append(clean_name)
+        
+        print(f"🔍 After filtering: {len(filtered_names)} valid doctor names")
+        
+        max_doctors = min(len(filtered_names), 20)  # Limit to reasonable number
+        
+        for i in range(max_doctors):
+            name = filtered_names[i]
+            
+            # Try to match insurance info to this doctor (approximate matching)
+            insurance_info = None
+            if i < len(insurances):
+                insurance_info = self._clean_text(insurances[i])
+            elif insurances:  # Use any available insurance info as fallback
+                insurance_info = self._clean_text(insurances[0])
+            
+            doctor = Doctor(
+                name=name,
+                specialty="Gastro-entérologue et hépatologue",
+                address=self._clean_text(addresses[i]) if i < len(addresses) else "Unknown",
+                distance=self._clean_text(distances[i]) if i < len(distances) else None,
+                image=images[i] if i < len(images) else None,
+                insurance=insurance_info,
+                consultation=None
+            )
+            
+            doctors.append(doctor)
+        
+        return doctors
+
     async def scrape_page(self, page_number: int) -> List[Doctor]:
-        """Scrape a single page for doctor information"""
+        """Scrape a single page for doctor information using improved HTML parsing"""
         page_url = self._build_page_url(page_number)
         print(f"📄 Scraping page {page_number}: {page_url}")
         
@@ -271,7 +339,7 @@ class DoctolibScraper:
             print("⚠️ No doctors to save")
             return
         
-        fieldnames = ['name', 'specialty', 'address', 'distance', 'sector_info', 'profile_url']
+        fieldnames = ['name', 'specialty', 'address', 'distance', 'image', 'insurance', 'consultation']
         
         with open(filename, 'w', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -311,8 +379,12 @@ class DoctolibScraper:
             print(f"   Address: {doctor.address}")
             if doctor.distance:
                 print(f"   Distance: {doctor.distance}")
-            if doctor.sector_info:
-                print(f"   Sector: {doctor.sector_info}")
+            if doctor.image:
+                print(f"   Image: {doctor.image}")
+            if doctor.insurance:
+                print(f"   Insurance: {doctor.insurance}")
+            if doctor.consultation:
+                print(f"   Consultation: {doctor.consultation}")
 
 
 def parse_arguments():
