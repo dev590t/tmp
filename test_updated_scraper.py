@@ -19,7 +19,7 @@ async def test_scraper():
     scraper = DoctolibScraper(test_url, max_pages=1)
     
     print(f"🔗 Test URL: {test_url}")
-    print(f"📋 Schema: {json.dumps(scraper.extraction_schema, indent=2)}")
+    print(f"📋 Schema: Now handled in utils.extract_doctor function")
     
     try:
         # Test scraping
@@ -41,21 +41,13 @@ async def test_scraper():
             
             total_doctors = len(doctors)
             doctors_with_name = sum(1 for d in doctors if d.name and d.name != "Unknown")
-            doctors_with_specialty = sum(1 for d in doctors if d.specialty and d.specialty != "Unknown")
-            doctors_with_address = sum(1 for d in doctors if d.address and d.address != "Unknown")
             doctors_with_distance = sum(1 for d in doctors if d.distance)
-            doctors_with_image = sum(1 for d in doctors if d.image)
             doctors_with_insurance = sum(1 for d in doctors if d.insurance)
-            doctors_with_consultation = sum(1 for d in doctors if d.consultation)
             
             print(f"Total doctors: {total_doctors}")
             print(f"With name: {doctors_with_name}/{total_doctors} ({doctors_with_name/total_doctors*100:.1f}%)")
-            print(f"With specialty: {doctors_with_specialty}/{total_doctors} ({doctors_with_specialty/total_doctors*100:.1f}%)")
-            print(f"With address: {doctors_with_address}/{total_doctors} ({doctors_with_address/total_doctors*100:.1f}%)")
             print(f"With distance: {doctors_with_distance}/{total_doctors} ({doctors_with_distance/total_doctors*100:.1f}%)")
-            print(f"With image: {doctors_with_image}/{total_doctors} ({doctors_with_image/total_doctors*100:.1f}%)")
             print(f"With insurance: {doctors_with_insurance}/{total_doctors} ({doctors_with_insurance/total_doctors*100:.1f}%)")
-            print(f"With consultation: {doctors_with_consultation}/{total_doctors} ({doctors_with_consultation/total_doctors*100:.1f}%)")
             
             # Show sample data
             print(f"\n📋 SAMPLE DATA (first 2 doctors):")
@@ -63,12 +55,8 @@ async def test_scraper():
             for i, doctor in enumerate(doctors[:2], 1):
                 print(f"\nDoctor {i}:")
                 print(f"  Name: {doctor.name}")
-                print(f"  Specialty: {doctor.specialty}")
-                print(f"  Address: {doctor.address}")
                 print(f"  Distance: {doctor.distance}")
-                print(f"  Image: {doctor.image}")
                 print(f"  Insurance: {doctor.insurance}")
-                print(f"  Consultation: {doctor.consultation}")
             
         else:
             print("❌ Test failed - no doctors found")
