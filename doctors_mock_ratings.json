@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Dr Christian REVOL",
+    "distance": "3,2 km",
+    "insurance": "Conventionné secteur 2",
+    "rating": "3,7"
+  },
+  {
+    "name": "Dr Natanel BENABOU",
+    "distance": "3,2 km",
+    "insurance": "Conventionné secteur 2",
+    "rating": null
+  },
+  {
+    "name": "Dr Karim CHAOUCHI",
+    "distance": "3,4 km",
+    "insurance": "Conventionné secteur 1",
+    "rating": null
+  },
+  {
+    "name": "Dr Widad BENDIB",
+    "distance": "3,4 km",
+    "insurance": "Conventionné secteur 2",
+    "rating": "4,3"
+  },
+  {
+    "name": "Cap Horn Santé - Montreuil",
+    "distance": "3,6 km",
+    "insurance": null,
+    "rating": "3,2"
+  },
+  {
+    "name": "Dr Robert CHOLLET",
+    "distance": "5,4 km",
+    "insurance": null,
+    "rating": "3,3"
+  },
+  {
+    "name": "Dr Gilles LESUR",
+    "distance": "7,1 km",
+    "insurance": "Conventionné secteur 2",
+    "rating": null
+  },
+  {
+    "name": "Dr Nadia Fathallah",
+    "distance": "7,4 km",
+    "insurance": "Conventionné secteur 2 avec OPTAM",
+    "rating": "4,4"
+  },
+  {
+    "name": "Dr Paul BENFREDJ",
+    "distance": "7,5 km",
+    "insurance": "Conventionné secteur 2",
+    "rating": "4,6"
+  },
+  {
+    "name": "Dr Rim HASSAN",
+    "distance": "7,7 km",
+    "insurance": "Conventionné secteur 2",
+    "rating": "3,5"
+  },
+  {
+    "name": "Dr Anne KERLIRZIN",
+    "distance": "8,3 km",
+    "insurance": "Conventionné secteur 1",
+    "rating": null
+  },
+  {
+    "name": "Dr THOMAS SEVERYNS",
+    "distance": "8,3 km",
+    "insurance": "Conventionné secteur 2",
+    "rating": "4,5"
+  },
+  {
+    "name": "Centre de Santé Saint-Jacques",
+    "distance": "8,7 km",
+    "insurance": "Conventionné secteur 1",
+    "rating": null
+  },
+  {
+    "name": "Dr JEAN FRANCOIS DUFRESNE",
+    "distance": "8,8 km",
+    "insurance": "Conventionné secteur 2 avec OPTAM",
+    "rating": "4,8"
+  },
+  {
+    "name": "Dr David ANCEL",
+    "distance": "8,8 km",
+    "insurance": "Conventionné secteur 2",
+    "rating": "3,9"
+  },
+  {
+    "name": "Polyclinique d'Aubervilliers",
+    "distance": "8,9 km",
+    "insurance": null,
+    "rating": "3,8"
+  },
+  {
+    "name": "Dr elise chanteloup",
+    "distance": "9,0 km",
+    "insurance": "Conventionné secteur 2",
+    "rating": "3,7"
+  },
+  {
+    "name": "Centre Municipal de Santé de Bobigny (CPS)",
+    "distance": "9,0 km",
+    "insurance": null,
+    "rating": "4,4"
+  },
+  {
+    "name": "Dr Alia MAMI",
+    "distance": "9,1 km",
+    "insurance": null,
+    "rating": "3,9"
+  }
+]
